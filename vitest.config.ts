@@ -4,8 +4,10 @@ export default defineConfig({
   test: {
     include: ['**/*.spec.ts'],
     exclude: ['node_modules'],
-    // Sometimes indexer catchup is slowwwww...
-    testTimeout: 20_000,
+    // Default timeout for regular tests (20 seconds)
+    // Load tests override this with their own timeout via test() second parameter
+    // For load tests that need longer, set LOAD_TEST_TIMEOUT_MS environment variable (defaults to 18 hours)
+    testTimeout: parseInt(process.env.VITEST_TEST_TIMEOUT_MS || '20000', 10),
     setupFiles: ['tests/setup.ts'],
     coverage: {
       include: ['src/**/*.ts'],

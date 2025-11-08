@@ -22,3 +22,29 @@ export async function generateTestAsset(algorand: AlgorandClient, sender: Addres
 
   return asset.assetId
 }
+
+export async function generateTestApp(algorand: AlgorandClient, sender: Address | string) {
+  // Minimal approval program that just approves all transactions
+  const approvalProgram = `#pragma version 8
+int 1
+return`
+
+  // Minimal clear state program that just approves
+  const clearStateProgram = `#pragma version 8
+int 1
+return`
+
+  const app = await algorand.send.appCreate({
+    sender: sender,
+    approvalProgram,
+    clearStateProgram,
+    schema: {
+      globalInts: 0,
+      globalByteSlices: 0,
+      localInts: 0,
+      localByteSlices: 0,
+    },
+  })
+
+  return app.appId
+}
